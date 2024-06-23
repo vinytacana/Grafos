@@ -1,0 +1,9 @@
+git init
+git add .
+git commit
+git checkout
+git branch
+git merge <branch>
+git branch -d<branch> //pra excluir depois de mesclar as duas branch
+git branch --list
+
