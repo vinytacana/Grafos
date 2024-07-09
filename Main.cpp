@@ -8,7 +8,14 @@ int main() {
  
     graph *G = initGraphArq("./output/grafo.txt");
     
-    if(G != NULL)
+    if(G != NULL){
         exibeGraph(G);
-    else printf("ERRO!\n");
+        numArestasL(G);
+        numVertL(G);
+        grauMinL(G);
+        grauMaxL(G);
+        grauMedioL(G);
+       outputFile(G,"test.txt");
+    }else
+         printf("ERRO!\n");
 }

@@ -153,3 +153,17 @@ int grauMedioL(graph *grafo){
     }
     return soma/grafo->V;
 }
+void outputFile(graph* grafo, const char *namefile){
+    FILE *arq= fopen(namefile, "w");
+    if(arq==NULL)
+        perror("Erro ao abrir arquivo de saida");
+    fprintf(arq,"\nO Grafo escolhido contem: \n");
+    fprintf(arq,"\nNumero de vertices: %d\n",numVertL(grafo));
+    fprintf(arq,"\nNumero de arestas: %d\n", numArestasL(grafo));
+    fprintf(arq,"\nGrau minimo do grafo: %d\n", grauMinL(grafo));
+    fprintf(arq,"\nGrau maximo de um grafo: %d\n", grauMaxL(grafo));
+    fprintf(arq,"\nGrau Medio do grafo: %d\n", grauMedioL(grafo));
+
+    fclose(arq);
+
+}

@@ -24,5 +24,6 @@ int grauVertL(graph *grafo, int *graus);
 int grauMinL(graph *grafo);
 int grauMaxL(graph *grafo);
 int grauMedioL(graph *grafo);
+void outputFile(graph* grafo, const char *namefile);
 
 #endif
