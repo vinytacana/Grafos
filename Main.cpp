@@ -9,13 +9,14 @@ int main() {
     graph *G = initGraphArq("./output/grafo.txt");
     
     if(G != NULL){
-        exibeGraph(G);
+       /* exibeGraph(G);
         numArestasL(G);
         numVertL(G);
         grauMinL(G);
         grauMaxL(G);
         grauMedioL(G);
-       outputFile(G,"test.txt");
+       outputFile(G,"test.txt");*/
+       writeGeneTree("dfs_saida.txt", 1, G);
     }else
          printf("ERRO!\n");
 }

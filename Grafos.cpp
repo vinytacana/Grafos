@@ -20,9 +20,11 @@ graph *newGraph(int V)
         grafo->V = V;
         grafo->U = 0;
         grafo->adj = (No **)malloc(V * sizeof(No *));
+        grafo->visitado= (int *)malloc(V*sizeof(int));
         for (int i = 0; i < V; i++)
         {
             grafo->adj[i] = NULL;
+            grafo->visitado=0;
         }
     }
     return grafo;
@@ -66,6 +68,7 @@ void freeGraph(graph *grafo)
         }
     }
     free(grafo->adj);
+    free(grafo->visitado);
     free(grafo);
 }
 graph *initGraphArq(const char *cam)
@@ -130,40 +133,121 @@ int grauMinL(graph *grafo)
     return min;
 }
 
-int grauMaxL(graph *grafo){
+int grauMaxL(graph *grafo)
+{
     int graus[grafo->V];
     grauVertL(grafo, graus);
-    int max=graus[0];
-    for(int i=0;i<grafo->V;i++){
-        if(graus[i]>max){
-          max=graus[i];  
+    int max = graus[0];
+    for (int i = 0; i < grafo->V; i++)
+    {
+        if (graus[i] > max)
+        {
+            max = graus[i];
         }
-        
     }
     return max;
-
 }
 
-int grauMedioL(graph *grafo){
+int grauMedioL(graph *grafo)
+{
     int graus[grafo->V];
     grauVertL(grafo, graus);
-    int soma=0;
-    for(int i=0;i<grafo->V;i++){
-        soma=soma+graus[i];
+    int soma = 0;
+    for (int i = 0; i < grafo->V; i++)
+    {
+        soma = soma + graus[i];
     }
-    return soma/grafo->V;
+    return soma / grafo->V;
 }
-void outputFile(graph* grafo, const char *namefile){
-    FILE *arq= fopen(namefile, "w");
-    if(arq==NULL)
+void outputFile(graph *grafo, const char *namefile)
+{
+    FILE *arq = fopen(namefile, "w");
+    if (arq == NULL)
         perror("Erro ao abrir arquivo de saida");
-    fprintf(arq,"\nO Grafo escolhido contem: \n");
-    fprintf(arq,"\nNumero de vertices: %d\n",numVertL(grafo));
-    fprintf(arq,"\nNumero de arestas: %d\n", numArestasL(grafo));
-    fprintf(arq,"\nGrau minimo do grafo: %d\n", grauMinL(grafo));
-    fprintf(arq,"\nGrau maximo de um grafo: %d\n", grauMaxL(grafo));
-    fprintf(arq,"\nGrau Medio do grafo: %d\n", grauMedioL(grafo));
+    fprintf(arq, "\nO Grafo escolhido contem: \n");
+    fprintf(arq, "\nNumero de vertices: %d\n", numVertL(grafo));
+    fprintf(arq, "\nNumero de arestas: %d\n", numArestasL(grafo));
+    fprintf(arq, "\nGrau minimo do grafo: %d\n", grauMinL(grafo));
+    fprintf(arq, "\nGrau maximo de um grafo: %d\n", grauMaxL(grafo));
+    fprintf(arq, "\nGrau Medio do grafo: %d\n", grauMedioL(grafo));
 
     fclose(arq);
+}
+/*
+void dfs(graph *grafo, int v, Info_Vertice vert[])
+{
+    printf("\nInicializou o dfs1");
+    grafo->visitado[v]=1;
+    vert[v].profundidade=0;
+    int w;    
+    printf("Vertex: %d", v);
 
+    No *aux = grafo->adj[v];
+    while (aux != NULL)
+    {
+        printf("\nO grafo nao é nulo, entrou no while do dfs");
+        w = aux->w;
+        if(w<0||w>=grafo->V){
+            printf("Erro");
+            exit(EXIT_FAILURE);
+        }
+        if (!grafo->visitado[w])
+        {
+            printf("\nEntrou no if do dfs, !grafo->visitado[w]");
+            vert[w].pai = v;
+            vert[w].profundidade= vert[v].profundidade+1;
+            dfs(grafo, w, vert);
+        }
+        aux = aux->prox;
+    }
+    printf("\nSaiu do dfs");
+}*/
+void DFS(graph *G, int v){
+    struct No* adjs= G->adj[v];
+    struct No* aux= adjs;
+
+    G->visitado[v]=1;
+    while(aux!=NULL){
+        int cv= aux->w;
+        if(G->visitado[v]==0){
+            DFS(G, cv);
+
+        }
+        aux= aux->prox;
+    }
+
+}
+int writeGeneTree(const char *namefile, int v, graph *G)
+{
+    v--;
+    Info_Vertice *vert = (Info_Vertice *)malloc(sizeof(Info_Vertice) * G->V);
+    int w;
+    if (vert == NULL)
+        exit(EXIT_FAILURE);
+    for (w = 0; w <=G->V; w++)
+    {
+        printf("test2");
+        G->visitado[w]=0;
+        vert[w].profundidade = 0;
+        vert[w].pai = -1;
+    }
+    //dfs(G, v, vert);
+    DFS(G, v);
+    FILE *arq = fopen(namefile, "w");
+    if (!arq)
+    {
+        free(vert);
+        return 0;
+        perror("Erro ao abrir o arquivo de saida");
+    }
+    for (int w = 0; w < G->V; w++)
+    {
+        if (G->visitado[w])
+        {
+            fprintf(arq, "Vertive=%u\tPai=%d\tProfundidade=%d\n", w + 1, vert[w].pai + 1, vert[w].profundidade);
+        }
+    }
+    fclose(arq);
+    free(vert);
+    return 1;
 }

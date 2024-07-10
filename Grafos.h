@@ -8,9 +8,17 @@ typedef struct No{
 typedef struct No No;
 typedef struct graph{
     int V,U;
-    No** adj;
+    int* visitado;
+    No ** adj;
    
 }graph;
+
+typedef struct Info_Vertice{
+    int pai;
+    int profundidade;
+}Info_Vertice;
+
+
 
 No* newNo(int w);
 graph* newGraph(int V);
@@ -25,5 +33,6 @@ int grauMinL(graph *grafo);
 int grauMaxL(graph *grafo);
 int grauMedioL(graph *grafo);
 void outputFile(graph* grafo, const char *namefile);
-
+void dfs(graph *grafo, int v, Info_Vertice vert[], int profundidade);
+int writeGeneTree(const char *namefile, int v, graph *G);
 #endif
