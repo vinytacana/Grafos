@@ -16,7 +16,7 @@ int main() {
         grauMaxL(G);
         grauMedioL(G);
        outputFile(G,"test.txt");*/
-       writeGeneTree("dfs_saida.txt", 1, G);
+      writeGeneTree("dfs_saida.txt", 1, G);
     }else
          printf("ERRO!\n");
 }

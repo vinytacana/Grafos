@@ -1,0 +1,12 @@
+
+O Grafo escolhido contem: 
+
+Numero de vertices: 5
+
+Numero de arestas: 5
+
+Grau minimo do grafo: 1
+
+Grau maximo de um grafo: 4
+
+Grau Medio do grafo: 2
