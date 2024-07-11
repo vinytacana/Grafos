@@ -6,7 +6,7 @@
 
 int main() {
  
-    graph *G = initGraphArq("./output/grafo.txt");
+    graph *G = initGraphArq("./output/grafo_1.txt");
     
     if(G != NULL){
        /* exibeGraph(G);

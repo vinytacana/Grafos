@@ -179,7 +179,6 @@ void dfs(graph *grafo, int v, Info_Vertice vert[])
 {
     printf("\nInicializou o dfs1");
     grafo->visitado[v]=1;
-    vert[v].profundidade=0;
     int w;    
     printf("Vertex: %d", v);
 
@@ -258,3 +257,4 @@ int writeGeneTree(const char *namefile, int v, graph *G)
     free(vert);
     return 1;
 }
+

@@ -11,6 +11,7 @@ typedef struct No No;
 typedef struct graph
 {
     int V, U;
+    int* visitado;
     No **adj;
 
 } graph;
@@ -26,7 +27,7 @@ No *newNo(int w)
 }
 graph *newGraph(int V)
 {
-    printf("Entrou na criacao");
+
     graph *grafo = (graph *)malloc(sizeof(graph));
     if (grafo)
     {
@@ -173,10 +174,18 @@ void outputFile(graph* grafo, const char *namefile){
     fclose(arq);
 
 }
+/*void dfs(graph *grafo, int v){
+    No* adj= grafo->adj[v];
+    No *temp= adj;
+
+    grafo->visitado[v]= 1;
+    
+
+}*/
 int main()
 {
 
-    graph *G = initGraphArq("./output/grafo_1.txt");
+    graph *G = initGraphArq("./output/grafo.txt");
 
     if (G != NULL)
     {

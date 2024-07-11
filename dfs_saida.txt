@@ -1,5 +1,0 @@
-Vertice=1	Pai=0	Profundidade=0
-Vertice=2	Pai=5	Profundidade=0
-Vertice=3	Pai=5	Profundidade=0
-Vertice=4	Pai=5	Profundidade=0
-Vertice=5	Pai=1	Profundidade=0
