@@ -3,10 +3,12 @@
 #include<string.h>
 #include "Grafos.h"
 #include "Grafos.cpp"
+#include "Queue.h"
+#include "Queue.cpp"
 
 int main() {
  
-    graph *G = initGraphArq("./output/grafo_1.txt");
+    graph *G = initGraphArq("./output/grafo.txt");
     
     if(G != NULL){
        /* exibeGraph(G);
@@ -17,6 +19,7 @@ int main() {
         grauMedioL(G);
        outputFile(G,"test.txt");*/
       writeGeneTree("dfs_saida.txt", 1, G);
+      writeGeneTreeBFS("bfs_saida.txt", 1, G);
     }else
          printf("ERRO!\n");
 }

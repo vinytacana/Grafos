@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "Grafos.h"
+#include "Queue.h"
 
 No *newNo(int w)
 {
@@ -256,5 +257,57 @@ int writeGeneTree(const char *namefile, int v, graph *G)
     fclose(arq);
     free(vert);
     return 1;
+}
+void bfs(graph *grafo, int v, Info_Vertice vert[]){
+    queue *queue= createQueue(grafo->V);
+    grafo->visitado[v]=1;
+    vert[v].profundidade=0;
+    enqueue(queue,v);
+    while(!isEmpty(queue)){
+        int u= dequeue(queue);
+        No *aux = grafo->adj[u];
+        while(aux != NULL){
+            int w= aux->w;
+            if(!grafo->visitado[w]){
+                grafo->visitado[w]=1;
+                vert[w].pai= u;
+                vert[w].profundidade = vert[u].profundidade+1;
+                enqueue(queue, w);
+            }
+            aux= aux->prox;
+        }
+    }
+    free(queue->dados);
+    free(queue);
+}
+int writeGeneTreeBFS(const char *namefile, int v, graph *G){
+    v--;
+    Info_Vertice *vert = (Info_Vertice*)malloc(sizeof(Info_Vertice) * G->V);
+    int w;
+    if(vert== NULL)
+        exit(EXIT_FAILURE);
+    for(w=0; w<G->V;w++){
+        G->visitado[w]=0;
+        vert[w].profundidade=0;
+        vert[w].pai=-1;
+    }
+    vert[v].profundidade=0;
+    bfs(G, v, vert);
+    FILE *arq= fopen(namefile, "w");
+    if(!arq){
+        free(vert);
+        perror("Erro ao abrir o arquivo de saida");
+        return 0;
+    }
+    for(int w=0;w<G->V;w++){
+        if(G->visitado[w]){
+            fprintf(arq, "Vertice=%u\tPai=%d\tProfundidade=%d\n",w+1, vert[w].pai+1, vert[w].profundidade );
+        }
+    }
+    fclose(arq);
+    free(vert);
+    return 1;
+
+
 }
 
