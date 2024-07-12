@@ -21,11 +21,11 @@ graph *newGraph(int V)
         grafo->V = V;
         grafo->U = 0;
         grafo->adj = (No **)malloc(V * sizeof(No *));
-        grafo->visitado= (int *)malloc(V*sizeof(int));
+        grafo->visitado = (int *)malloc(V * sizeof(int));
         for (int i = 0; i < V; i++)
         {
             grafo->adj[i] = NULL;
-            grafo->visitado[i]=0;
+            grafo->visitado[i] = 0;
         }
     }
     return grafo;
@@ -179,8 +179,8 @@ void outputFile(graph *grafo, const char *namefile)
 void dfs(graph *grafo, int v, Info_Vertice vert[])
 {
     printf("\nInicializou o dfs1");
-    grafo->visitado[v]=1;
-    int w;    
+    grafo->visitado[v] = 1;
+    int w;
     printf("Vertex: %d", v);
 
     No *aux = grafo->adj[v];
@@ -188,7 +188,8 @@ void dfs(graph *grafo, int v, Info_Vertice vert[])
     {
         printf("\nO grafo nao é nulo, entrou no while do dfs");
         w = aux->w;
-        if(w<0||w>=grafo->V){
+        if (w < 0 || w >= grafo->V)
+        {
             printf("Erro");
             exit(EXIT_FAILURE);
         }
@@ -196,50 +197,50 @@ void dfs(graph *grafo, int v, Info_Vertice vert[])
         {
             printf("\nEntrou no if do dfs, !grafo->visitado[w]");
             vert[w].pai = v;
-            vert[w].profundidade= vert[v].profundidade+1;
+            vert[w].profundidade = vert[v].profundidade + 1;
             dfs(grafo, w, vert);
         }
         aux = aux->prox;
     }
     printf("\nSaiu do dfs");
-}/*
-void DFS(graph *G, int v){
-    struct No* adjs= G->adj[v];
+} /*
+ void DFS(graph *G, int v){
+     struct No* adjs= G->adj[v];
 
-    printf("\n%d", G->visitado[0]);
-    struct No* aux= adjs;
+     printf("\n%d", G->visitado[0]);
+     struct No* aux= adjs;
 
-    printf("\n%d", v);
-    G->visitado[v]=1;
-    while(aux!=NULL){
-        int cv= aux->w;
-        if(G->visitado[cv]==0){
-            G->visitado[cv].pai = v;
-            G->visitado[cv].profundidade= G->visitado[v].profundidade+1;
-            DFS(G, cv);
+     printf("\n%d", v);
+     G->visitado[v]=1;
+     while(aux!=NULL){
+         int cv= aux->w;
+         if(G->visitado[cv]==0){
+             G->visitado[cv].pai = v;
+             G->visitado[cv].profundidade= G->visitado[v].profundidade+1;
+             DFS(G, cv);
 
-        }
-        aux= aux->prox;
-    }
+         }
+         aux= aux->prox;
+     }
 
-}*/
+ }*/
 int writeGeneTree(const char *namefile, int v, graph *G)
 {
     v--;
-    Info_Vertice *vert = (Info_Vertice *)malloc(sizeof(Info_Vertice) * G->V-1);
+    Info_Vertice *vert = (Info_Vertice *)malloc(sizeof(Info_Vertice) * G->V - 1);
     int w;
     if (vert == NULL)
         exit(EXIT_FAILURE);
-    for (w = 0; w <G->V; w++)
+    for (w = 0; w < G->V; w++)
     {
         printf("test2");
-        G->visitado[w]=0;
+        G->visitado[w] = 0;
         vert[w].profundidade = 0;
         vert[w].pai = -1;
     }
-    
+
     dfs(G, v, vert);
-    //DFS(G, v);
+    // DFS(G, v);
     FILE *arq = fopen(namefile, "w");
     if (!arq)
     {
@@ -258,56 +259,62 @@ int writeGeneTree(const char *namefile, int v, graph *G)
     free(vert);
     return 1;
 }
-void bfs(graph *grafo, int v, Info_Vertice vert[]){
-    queue *queue= createQueue(grafo->V);
-    grafo->visitado[v]=1;
-    vert[v].profundidade=0;
-    enqueue(queue,v);
-    while(!isEmpty(queue)){
-        int u= dequeue(queue);
+void bfs(graph *grafo, int v, Info_Vertice vert[])
+{
+    queue *queue = createQueue(grafo->V);
+    grafo->visitado[v] = 1;
+    vert[v].profundidade = 0;
+    enqueue(queue, v);
+    while (!isEmpty(queue))
+    {
+        int u = dequeue(queue);
         No *aux = grafo->adj[u];
-        while(aux != NULL){
-            int w= aux->w;
-            if(!grafo->visitado[w]){
-                grafo->visitado[w]=1;
-                vert[w].pai= u;
-                vert[w].profundidade = vert[u].profundidade+1;
+        while (aux != NULL)
+        {
+            int w = aux->w;
+            if (!grafo->visitado[w])
+            {
+                grafo->visitado[w] = 1;
+                vert[w].pai = u;
+                vert[w].profundidade = vert[u].profundidade + 1;
                 enqueue(queue, w);
             }
-            aux= aux->prox;
+            aux = aux->prox;
         }
     }
     free(queue->dados);
     free(queue);
 }
-int writeGeneTreeBFS(const char *namefile, int v, graph *G){
+int writeGeneTreeBFS(const char *namefile, int v, graph *G)
+{
     v--;
-    Info_Vertice *vert = (Info_Vertice*)malloc(sizeof(Info_Vertice) * G->V);
+    Info_Vertice *vert = (Info_Vertice *)malloc(sizeof(Info_Vertice) * G->V);
     int w;
-    if(vert== NULL)
+    if (vert == NULL)
         exit(EXIT_FAILURE);
-    for(w=0; w<G->V;w++){
-        G->visitado[w]=0;
-        vert[w].profundidade=0;
-        vert[w].pai=-1;
+    for (w = 0; w < G->V; w++)
+    {
+        G->visitado[w] = 0;
+        vert[w].profundidade = 0;
+        vert[w].pai = -1;
     }
-    vert[v].profundidade=0;
+    vert[v].profundidade = 0;
     bfs(G, v, vert);
-    FILE *arq= fopen(namefile, "w");
-    if(!arq){
+    FILE *arq = fopen(namefile, "w");
+    if (!arq)
+    {
         free(vert);
         perror("Erro ao abrir o arquivo de saida");
         return 0;
     }
-    for(int w=0;w<G->V;w++){
-        if(G->visitado[w]){
-            fprintf(arq, "Vertice=%u\tPai=%d\tProfundidade=%d\n",w+1, vert[w].pai+1, vert[w].profundidade );
+    for (int w = 0; w < G->V; w++)
+    {
+        if (G->visitado[w])
+        {
+            fprintf(arq, "Vertice=%u\tPai=%d\tProfundidade=%d\n", w + 1, vert[w].pai + 1, vert[w].profundidade);
         }
     }
     fclose(arq);
     free(vert);
     return 1;
-
-
 }
-

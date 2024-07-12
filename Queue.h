@@ -1,8 +1,9 @@
 #ifndef fila_bfs
 #define fila_bfs
-#include<stdio.h>
+#include <stdio.h>
 
-struct queue{
+struct queue
+{
     int tam;
     float *dados;
     int first;
