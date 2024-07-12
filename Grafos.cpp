@@ -318,3 +318,57 @@ int writeGeneTreeBFS(const char *namefile, int v, graph *G)
     free(vert);
     return 1;
 }
+int distance(graph *g, int src, int dest)
+{
+    int *dist = (int *)malloc(g->V * sizeof(int));
+    for (int i = 0; i < g->V; i++)
+    {
+        dist[i] = -1;
+    }
+    queue *q = createQueue(g->V);
+    enqueue(q, src);
+    dist[src] = 0;
+    while (!isEmpty(q))
+    {
+        int u = dequeue(q);
+        No *aux = g->adj[u];
+        while (aux != NULL)
+        {
+            int v = aux->w;
+            if (dist[v] == -1)
+            {
+                dist[v] = dist[u] + 1;
+                enqueue(q, v);
+                if (v == dest)
+                {
+                    int d = dist[v];
+                    free(dist);
+                    free(q->dados);
+                    free(q);
+                    return d;
+                }
+            }
+            aux = aux->prox;
+        }
+    }
+    free(dist);
+    free(q->dados);
+    free(q);
+    return -1;
+}
+int diameter(graph *G)
+{
+    int maxDistance = 0;
+    for (int i = 0; i < G->V; i++)
+    {
+        for (int j = i + 1; j < G->V; j++)
+        {
+            int dist = distance(G, i, j);
+            if (dist > maxDistance)
+            {
+                maxDistance = dist;
+            }
+        }
+    }
+    return maxDistance;
+}

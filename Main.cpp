@@ -9,7 +9,7 @@
 int main()
 {
 
-  graph *G = initGraphArq("./output/grafo_1.txt");
+  graph *G = initGraphArq("./output/grafo.txt");
 
   if (G != NULL)
   {
@@ -20,9 +20,14 @@ int main()
      grauMaxL(G);
      grauMedioL(G);
     outputFile(G,"test.txt");*/
-    writeGeneTree("dfs_saida.txt", 1, G);
-    writeGeneTreeBFS("bfs_saida.txt", 1, G);
+
+    int diam = diameter(G);
+    printf("\nDiametro do Grafo: %d", diam);
+    // writeGeneTree("dfs_saida.txt", 1, G);
+    // writeGeneTreeBFS("bfs_saida.txt", 1, G);
+    freeGraph(G);
   }
   else
     printf("ERRO!\n");
+  return 0;
 }

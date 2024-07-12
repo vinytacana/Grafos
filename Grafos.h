@@ -38,4 +38,6 @@ void dfs(graph *grafo, int v, Info_Vertice vert[], int profundidade);
 int writeGeneTree(const char *namefile, int v, graph *G);
 void bfs(graph *grafo, int v, Info_Vertice vert[]);
 int writeGeneTreeBFS(const char *namefile, int v, graph *G);
+int distance(graph *g, int src, int dest);
+int diameter(graph *G);
 #endif
