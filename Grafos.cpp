@@ -178,15 +178,11 @@ void outputFile(graph *grafo, const char *namefile)
 
 void dfs(graph *grafo, int v, Info_Vertice vert[])
 {
-    printf("\nInicializou o dfs1");
     grafo->visitado[v] = 1;
     int w;
-    printf("Vertex: %d", v);
-
     No *aux = grafo->adj[v];
     while (aux != NULL)
     {
-        printf("\nO grafo nao é nulo, entrou no while do dfs");
         w = aux->w;
         if (w < 0 || w >= grafo->V)
         {
@@ -195,14 +191,12 @@ void dfs(graph *grafo, int v, Info_Vertice vert[])
         }
         if (!grafo->visitado[w])
         {
-            printf("\nEntrou no if do dfs, !grafo->visitado[w]");
             vert[w].pai = v;
             vert[w].profundidade = vert[v].profundidade + 1;
             dfs(grafo, w, vert);
         }
         aux = aux->prox;
     }
-    printf("\nSaiu do dfs");
 } /*
  void DFS(graph *G, int v){
      struct No* adjs= G->adj[v];
@@ -233,7 +227,6 @@ int writeGeneTree(const char *namefile, int v, graph *G)
         exit(EXIT_FAILURE);
     for (w = 0; w < G->V; w++)
     {
-        printf("test2");
         G->visitado[w] = 0;
         vert[w].profundidade = 0;
         vert[w].pai = -1;
@@ -259,11 +252,12 @@ int writeGeneTree(const char *namefile, int v, graph *G)
     free(vert);
     return 1;
 }
-void bfs(graph *grafo, int v, Info_Vertice vert[])
+int bfs(graph *grafo, int v, Info_Vertice vert[])
 {
     queue *queue = createQueue(grafo->V);
     grafo->visitado[v] = 1;
     vert[v].profundidade = 0;
+    int last_vertice = v;
     enqueue(queue, v);
     while (!isEmpty(queue))
     {
@@ -278,12 +272,14 @@ void bfs(graph *grafo, int v, Info_Vertice vert[])
                 vert[w].pai = u;
                 vert[w].profundidade = vert[u].profundidade + 1;
                 enqueue(queue, w);
+                last_vertice = w;
             }
             aux = aux->prox;
         }
     }
     free(queue->dados);
     free(queue);
+    return last_vertice;
 }
 int writeGeneTreeBFS(const char *namefile, int v, graph *G)
 {
@@ -318,57 +314,233 @@ int writeGeneTreeBFS(const char *namefile, int v, graph *G)
     free(vert);
     return 1;
 }
-int distance(graph *g, int src, int dest)
+
+int Distance(graph *G, int v, int u)
 {
-    int *dist = (int *)malloc(g->V * sizeof(int));
-    for (int i = 0; i < g->V; i++)
-    {
-        dist[i] = -1;
-    }
-    queue *q = createQueue(g->V);
-    enqueue(q, src);
-    dist[src] = 0;
-    while (!isEmpty(q))
-    {
-        int u = dequeue(q);
-        No *aux = g->adj[u];
-        while (aux != NULL)
-        {
-            int v = aux->w;
-            if (dist[v] == -1)
-            {
-                dist[v] = dist[u] + 1;
-                enqueue(q, v);
-                if (v == dest)
-                {
-                    int d = dist[v];
-                    free(dist);
-                    free(q->dados);
-                    free(q);
-                    return d;
-                }
-            }
-            aux = aux->prox;
-        }
-    }
-    free(dist);
-    free(q->dados);
-    free(q);
-    return -1;
+    if (v == u)
+        return 0;
+    Info_Vertice *vert = (Info_Vertice *)malloc(sizeof(Info_Vertice) * G->V);
+    if (vert == NULL)
+        exit(EXIT_FAILURE);
+    for (int i = 0; i < G->V; i++)
+        G->visitado[i] = 0;
+    bfs(G, v, vert);
+    int distance = vert[u].profundidade;
+    free(vert);
+    return distance;
+}
+int eccentricity(graph *G, int v)
+{
+    Info_Vertice *vert = (Info_Vertice *)malloc(sizeof(Info_Vertice) * G->V);
+    if (vert == NULL)
+        exit(EXIT_FAILURE);
+    for (int i = 0; i < G->V; i++)
+        G->visitado[i] = 0;
+    int vert_distante = bfs(G, v, vert);
+    int eccen = vert[vert_distante].profundidade;
+    free(vert);
+    return eccen;
 }
 int diameter(graph *G)
 {
-    int maxDistance = 0;
+    int diametro = 0;
     for (int i = 0; i < G->V; i++)
     {
-        for (int j = i + 1; j < G->V; j++)
+        int dist = eccentricity(G, i);
+        if (dist > diametro)
         {
-            int dist = distance(G, i, j);
-            if (dist > maxDistance)
-            {
-                maxDistance = dist;
-            }
+            diametro = dist;
         }
     }
-    return maxDistance;
+    return diametro;
 }
+int Diameter(graph *g)
+{
+    Info_Vertice *vert = (Info_Vertice *)malloc(sizeof(Info_Vertice) * g->V);
+    if (vert == NULL)
+        exit(EXIT_FAILURE);
+    for (int i = 0; i < g->V; i++)
+        g->visitado[i] = 0;
+    int v = bfs(g, 0, vert);
+    for (int i = 0; i < g->V; i++)
+        g->visitado[i] = 0;
+    int u = bfs(g, v, vert);
+    int diametro_prox = vert[u].profundidade;
+    free(vert);
+    return diametro_prox;
+}
+void bfs_cc(graph *g, int v, int *visited, int *componet, int *size){
+    queue *q= createQueue(g->V);
+    enqueue(q, v);
+    visited[v]=1;
+
+    while(!isEmpty(q)){
+        int u= dequeue(q);
+        componet[*size]= u;
+        (*size)++;
+        No *aux= g->adj[u];
+        while(aux!=NULL){
+            int w= aux->w;
+            if(!visited[w]){
+                visited[w]=1;
+                enqueue(q, w);
+            }
+            aux=aux->prox;
+        }
+    }
+    free(q->dados);
+    free(q);
+}/*
+static ConnectedComponets *initCc(){
+    ConnectedComponets *cc= (ConnectedComponets *)malloc(sizeof(ConnectedComponets));
+    if(cc == NULL)
+        exit(EXIT_FAILURE);
+    cc->components = (Componet *)malloc(sizeof(Componet)*10);
+    if(cc->components==NULL)
+        exit(EXIT_FAILURE);
+    cc->numComponents = 0;
+    cc->size= 10;
+    return cc;
+}
+
+static void Lrealloc(ConnectedComponets *cc, int newSize){
+    cc->components= (Componet *)realloc(cc->components, sizeof(Componet)* newSize);
+    if(cc->components==NULL)
+        exit(EXIT_FAILURE);
+    cc->size= newSize;
+}
+
+void AddVtoCc(Componet *C, int vertex){
+    C->vertices= (int*)realloc(C->vertices, (C->size+1));
+    C->vertices[C->size]= vertex;
+    C->size++;
+}
+ConnectedComponets *findCc(graph *G){
+   ConnectedComponets *cc = initCc();
+   int *visited= (int *)malloc(G->V* sizeof(int));
+   for(int i=0; i< G->V;i++){
+    visited[i]=0;
+   }
+   for(int v=0;v<G->V;v++){
+    if(!visited[v]){
+        if(cc->numComponents==cc->size){
+            Lrealloc(cc, cc->size*2);
+        }
+        Componet *C= &cc->components[cc->numComponents];
+        C->vertices= NULL;
+        C->size=0;
+        queue *q = createQueue(G->V);
+        visited[v]=1;
+        while(!isEmpty(q)){
+            int u= dequeue(q);
+            AddVtoCc(C,u);
+            No *aux= G->adj[u];
+            while(aux!=NULL){
+                int w = aux->w;
+                if(!visited[w]){
+                    enqueue(q,w);
+                    visited[w]=1;
+                }
+                aux= aux->prox;
+            }
+        }
+        cc->numComponents++;
+        free(q->dados);
+        free(q);
+    }
+   }
+   free(visited);
+   return cc;
+
+}*/
+static ConnectedComponets allocCc(){
+    ConnectedComponets *cc= (ConnectedComponets *)malloc(sizeof(ConnectedComponets));
+    if(cc==NULL)
+        exit(EXIT_FAILURE);
+    cc->components= (Componet*)malloc(sizeof(Componet)*10);
+    if(cc->components==NULL)
+        exit(EXIT_FAILURE);
+    cc->numComponents=0;
+    cc->size=10;
+    return *cc;
+}
+static void ReallocC(ConnectedComponets cc,int newSize){
+    cc.components=(Componet*)realloc(cc.components, sizeof(Componet)*newSize);
+    if(cc.components==NULL)
+        exit(EXIT_FAILURE);
+    cc.size= newSize;
+}
+void AddVtoCc(Componet *C, int vertex){
+    C->vertices=(int *)realloc(C->vertices, (C->size + 1) * sizeof(int));
+    C->vertices[C->size]=vertex;
+    C->size++;
+}
+void dfsRCc(graph *g, int v, int id){
+    cc[v]=id;
+    No *aux= g->adj[v];
+    while(aux!=NULL){
+        int w = aux->w;
+        if(cc[w]==0)
+            dfsRCc(g,w, id);
+        aux= aux->prox;
+    }
+}
+int GraphCc(graph *G)
+{
+    int id=0;
+    cc= (int *)malloc(G->V *sizeof(int));
+    for(int v=0;v<G->V;v++)
+        cc[v]=-1;
+    for(int v=0;v<G->V;++v)
+        if(cc[v]==-1)
+            dfsRCc(G,v,id++);
+    return id;
+}
+ConnectedComponets findCC(graph *G){
+    int numC= GraphCc(G);
+    ConnectedComponets ccstr= allocCc();
+    if(numC>ccstr.size)
+        ReallocC(ccstr, numC);
+    for(int i=0; i<numC;i++){
+        ccstr.components[i].vertices=NULL;
+        ccstr.components[i].size=0;
+    }
+    for(int v=0;v<G->V;v++){
+        AddVtoCc(&ccstr.components[cc[v]],v);
+    }
+    ccstr.numComponents= numC;
+    free(cc);
+    return ccstr;    
+}
+void freeCc(ConnectedComponets *cc){
+    for(int i=0;i<cc->numComponents;i++){
+        free(cc->components[i].vertices);
+    }
+    free(cc->components);
+    cc->numComponents=0;
+}
+int compVertexes(const void *a, const void *b){
+    return (*(int *)a - *(int *)b);
+}
+void sortCc(ConnectedComponets *cc){
+    for(int i=0; i<cc->numComponents;i++){
+        qsort(cc->components[i].vertices, cc->components[i].size, sizeof(int), compVertexes);
+    }
+}
+void showConnectedComponents(graph *g){
+    ConnectedComponets cc = findCC(g);
+    sortCc(&cc);
+    printf("\nNumero de componentes conexas: %d\n", cc.numComponents);
+    for(int i=0;i<cc.numComponents;i++){
+        printf("Componente %d: tamanho %d, vertices= ", i+1, cc.components[i].size);
+        for(int j=0;j<cc.components[i].size;j++){
+            printf("%d", cc.components[i].vertices[j]+1);
+        }
+        printf("\n");
+    }
+    freeCc(&cc);
+}
+int UGraphConnect(graph G, int s, int t){
+    return cc[s]== cc[t];
+}
+
