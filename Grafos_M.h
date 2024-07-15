@@ -13,5 +13,12 @@ void freeGraph_M(graph_M *G);
 int insertAresta_M(graph_M *G, int u, int v);
 int removeAresta_M(graph_M *G, int u, int v);
 graph_M *initGraphArq_M(char *caminho);
+void showGraph_M(graph_M *G);
+void grauVert_M(graph_M *G, int *graus);
+int numVert_M(graph_M *G);
+int grauMin_M(graph_M *G);
+int grauMax_M(graph_M *G);
+int grauMedio_M(graph_M *G);
+void outputFile_M(graph_M *G, const char *namefile);
 
 #endif

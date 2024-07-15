@@ -15,6 +15,8 @@ int main()
 
   if (G != NULL)
   {
+    showGraph_M(G);
+    outputFile_M(G, "saida.txt");
      /*exibeGraph(G);
      numArestasL(G);
      numVertL(G);
