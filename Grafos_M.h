@@ -18,7 +18,7 @@ graph_M *crateGraph_M(int v);
 void freeGraph_M(graph_M *G);
 int insertAresta_M(graph_M *G, int u, int v);
 int removeAresta_M(graph_M *G, int u, int v);
-graph_M *initGraphArq_M(char *caminho);
+graph_M *initGraphArq_M(const char *caminho);
 void showGraph_M(graph_M *G);
 void grauVert_M(graph_M *G, int *graus);
 int numVert_M(graph_M *G);

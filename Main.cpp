@@ -11,12 +11,12 @@
 int main()
 {
 
-  graph_M *G = initGraphArq_M("./output/grafo.txt");
-  graph *GrafoL = initGraphArq("./output/grafo.txt");
+  graph_M *G = initGraphArq_M("./output/grafo_2.txt");
+ // graph *GrafoL = initGraphArq("./output/grafo.txt");
 
   if (G != NULL)
   {
-    showGraph_M(G);
+    //showGraph_M(G);
     //outputFile_M(G, "saidaM.txt");
     //writeGeneTree_M("dfs_saida.txt", 1, G);
     //writeGeneTreeBfs_M("Bfs_saida.txt",1, G );

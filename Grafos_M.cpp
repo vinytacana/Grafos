@@ -86,7 +86,7 @@ int removeAresta_M(graph_M *G, int u, int v)
     return 0;
 }
 
-graph_M *initGraphArq_M(char *caminho)
+graph_M *initGraphArq_M(const char *caminho)
 {
     FILE *arq = fopen(caminho, "r");
     if (arq == NULL)
