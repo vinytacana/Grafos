@@ -17,9 +17,12 @@ int main()
   if (G != NULL)
   {
     showGraph_M(G);
-    outputFile_M(G, "saidaM.txt");
-    writeGeneTree_M("dfs_saida.txt", 1, G);
-     /*exibeGraph(G);
+    //outputFile_M(G, "saidaM.txt");
+    //writeGeneTree_M("dfs_saida.txt", 1, G);
+    //writeGeneTreeBfs_M("Bfs_saida.txt",1, G );
+    int dim =Diameter_M(G);
+    printf("\n Diametro do grafo: %d\n", dim);
+     /*exibeGraph(G); 
      numArestasL(G);
      numVertL(G);
      grauMinL(G);

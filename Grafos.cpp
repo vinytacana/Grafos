@@ -119,6 +119,7 @@ int grauVertL(graph *grafo, int *graus)
             aux = aux->prox;
         }
     }
+    return 0;
 }
 int grauMinL(graph *grafo)
 {
