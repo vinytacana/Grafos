@@ -199,7 +199,7 @@ void outputFile_M(graph_M *G, const char *namefile)
 }
 void dfs_M(graph_M *G, int v, Info_Vertice_M vert[])
 {
-    G->visitado[v] = 0;
+    G->visitado[v] = 1;
     for (int w = 0; w < G->V; w++)
     {
         if (G->adj[v][w] == 1 && !G->visitado[w])
@@ -233,7 +233,7 @@ int writeGeneTree_M(const char *namefile, int v, graph_M *G)
     {
         if (G->visitado[w])
         {
-            fprintf(arq, "Vertice= %u\tPai=%d\tProfundidade=%d\t", w + 1, vert[w].pai + 1, vert[w].profundidade);
+            fprintf(arq, "\nVertice= %u\tPai=%d\tProfundidade=%d\t", w + 1, vert[w].pai + 1, vert[w].profundidade);
         }
     }
     fclose(arq);
