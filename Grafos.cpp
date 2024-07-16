@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include<time.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include "Grafos.h"
@@ -255,6 +256,9 @@ int writeGeneTree(const char *namefile, int v, graph *G)
 }
 int bfs(graph *grafo, int v, Info_Vertice vert[])
 {
+    clock_t start, end;
+    double time_t;
+    start= clock();
     queue *queue = createQueue(grafo->V);
     grafo->visitado[v] = 1;
     vert[v].profundidade = 0;
@@ -280,6 +284,9 @@ int bfs(graph *grafo, int v, Info_Vertice vert[])
     }
     free(queue->dados);
     free(queue);
+    end= clock();
+    time_t= ((double)(end-start))/CLOCKS_PER_SEC;
+    printf("Tempo de execucao do BFS: %f segundos\n", time_t);
     return last_vertice;
 }
 int writeGeneTreeBFS(const char *namefile, int v, graph *G)

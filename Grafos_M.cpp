@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include<time.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include "Grafos_M.h"
@@ -243,7 +244,7 @@ int writeGeneTree_M(const char *namefile, int v, graph_M *G)
 int bfs_M(graph_M *G, int v, Info_Vertice_M vert[]){
     queue *q= createQueue(G->V);
     G->visitado[v]=1;
-    vert[v].profundidade=0;//erro de segmentacao fault aqui
+    vert[v].profundidade=0;
     int lastVertice= v;
     enqueue(q,v);
     while(!isEmpty(q)){
