@@ -240,24 +240,26 @@ int writeGeneTree_M(const char *namefile, int v, graph_M *G)
     free(vert);
     return 1;
 }
-void bfs_M(graph_M *G, int v, Info_Vertice_M vert[]){
+int bfs_M(graph_M *G, int v, Info_Vertice_M vert[]){
     queue *q= createQueue(G->V);
     G->visitado[v]=1;
-    vert[v].profundidade=0;
+    vert[v].profundidade=0;//erro de segmentacao fault aqui
+    int lastVertice= v;
     enqueue(q,v);
     while(!isEmpty(q)){
         int u= dequeue(q);
-        for(int w=0;w<G->V;w++){
-            if(G->adj[u][w]==1 && !G->visitado[w]){
+        for(int w=0;w<G->V;w++){                                                                                                                                                                                                                                                                                                                                                                               if(G->adj[u][w]==1 && !G->visitado[w]){
                 G->visitado[w]=1;
                 vert[w].pai=u;
                 vert[w].profundidade= vert[u].profundidade+1;
                 enqueue(q,w);
+                lastVertice= w;
             }
         }
     }
     free(q->dados);
     free(q);
+    return lastVertice;
 }
 int writeGeneTreeBfs_M(const char *namefile, int v, graph_M *G){
     Info_Vertice_M *vert= (Info_Vertice_M *)malloc(sizeof(Info_Vertice_M)* G->V);
@@ -286,4 +288,53 @@ int writeGeneTreeBfs_M(const char *namefile, int v, graph_M *G){
     fclose(arq);
     free(vert);
     return 1;
+}
+int distance_M(graph_M *G, int v, int u){
+    if(v==u)
+        return 0;
+    Info_Vertice_M *vert= (Info_Vertice_M *)malloc(sizeof(Info_Vertice_M )* G->V);
+    if(vert==NULL)
+        exit(EXIT_FAILURE);
+    for(int i=0;i<G->V;i++)
+        G->visitado[i]=0;
+    bfs_M(G,u, vert);
+    int distance= vert[u].profundidade;
+    free(vert);
+    return distance;
+}
+int eccentricity_M(graph_M  *G, int v){
+    Info_Vertice_M *vert= (Info_Vertice_M *)malloc(sizeof(Info_Vertice_M)* G->V);
+    if(vert==NULL)
+        exit(EXIT_FAILURE);
+    for(int i=0;i<G->V;i++)
+        G->visitado[i]=0;
+    int vertDistance= bfs_M(G, v, vert);
+    int eccen= vert[vertDistance].profundidade;
+    free(vert);
+    return eccen;
+
+}
+int diameter_M(graph_M *G){
+    int diametro =0;
+    for(int i=0;i<G->V;i++){
+        int dist= eccentricity_M(G, i);
+        if(dist>diametro){
+            diametro = dist;
+        }
+    }
+    return diametro;
+}
+int Diameter_M(graph_M *G){
+    Info_Vertice_M *vert=(Info_Vertice_M *)malloc(sizeof(Info_Vertice_M)* G->V);
+    if(vert==NULL)
+        exit(EXIT_FAILURE);
+    for( int i=0;i<G->V;i++)
+        G->visitado[i]=0;
+    int v= bfs_M(G, 0, vert);
+    for(int i=0;i<G->V;i++)
+        G->visitado[i]=0;
+    int u= bfs_M(G,v, vert);
+    int diametro_prox= vert[u].profundidade;
+    free(vert);
+    return diametro_prox;    
 }

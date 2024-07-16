@@ -28,6 +28,11 @@ int grauMedio_M(graph_M *G);
 void outputFile_M(graph_M *G, const char *namefile);
 void dfs_M(graph_M *G, int v, Info_Vertice_M vert[]);
 int writeGeneTree_M(const char *namefile, int v, graph_M *G);
-void bfs_M(graph_M *G, int v, Info_Vertice_M vert[]);
+int bfs_M(graph_M *G, int v, Info_Vertice_M vert[]);
 int writeGeneTreeBfs_M(const char *namefile, int v, graph_M *G);
+int distance_M(graph_M *G, int v, int u);
+int eccentricity_M(graph_M  *G, int v);
+int diameter_M(graph_M *G);
+int Diameter_M(graph_M *G);
+
 #endif
