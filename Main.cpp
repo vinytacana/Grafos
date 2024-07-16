@@ -12,18 +12,20 @@ int main()
 {
 
   graph_M *G = initGraphArq_M("./output/grafo.txt");
+  graph *GrafoL = initGraphArq("./output/grafo.txt");
 
   if (G != NULL)
   {
     showGraph_M(G);
-    outputFile_M(G, "saida.txt");
+    outputFile_M(G, "saidaM.txt");
+    writeGeneTree_M("dfs_saida.txt", 1, G);
      /*exibeGraph(G);
      numArestasL(G);
      numVertL(G);
      grauMinL(G);
      grauMaxL(G);
      grauMedioL(G);
-    outputFile(G,"test.txt");*/
+    outputFile(GrafoL,"saidaList.txt");*/
 
     //int diam = Diameter(G);
     //printf("\nDiametro do Grafo: %d", diam);
