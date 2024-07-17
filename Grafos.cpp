@@ -282,12 +282,26 @@ int bfs(graph *grafo, int v, Info_Vertice vert[])
             aux = aux->prox;
         }
     }
-    free(queue->dados);
-    free(queue);
     end= clock();
     time_t= ((double)(end-start))/CLOCKS_PER_SEC;
-    printf("Tempo de execucao do BFS: %f segundos\n", time_t);
-    return last_vertice;
+    free(queue->dados);
+    free(queue);
+    return time_t;
+}
+
+double TimeBfs(graph *G, int v, int n){
+    double totalTime= 0.0;
+    for(int i=0;i<G->V;i++){
+        Info_Vertice *vert= (Info_Vertice *)malloc(sizeof(Info_Vertice)* G->V);
+        for(int w=0;w<G->V;i++){
+            G->visitado[w]=0;
+            vert[w].profundidade=0;
+            vert[w].pai=-1;
+        }
+        totalTime+= bfs(G, v, vert);
+        free(vert);
+    }
+    return totalTime/n;
 }
 int writeGeneTreeBFS(const char *namefile, int v, graph *G)
 {
