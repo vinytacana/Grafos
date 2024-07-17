@@ -256,9 +256,6 @@ int writeGeneTree(const char *namefile, int v, graph *G)
 }
 int bfs(graph *grafo, int v, Info_Vertice vert[])
 {
-    clock_t start, end;
-    double time_t;
-    start= clock();
     queue *queue = createQueue(grafo->V);
     grafo->visitado[v] = 1;
     vert[v].profundidade = 0;
@@ -282,27 +279,11 @@ int bfs(graph *grafo, int v, Info_Vertice vert[])
             aux = aux->prox;
         }
     }
-    end= clock();
-    time_t= ((double)(end-start))/CLOCKS_PER_SEC;
     free(queue->dados);
     free(queue);
-    return time_t;
+    return last_vertice;
 }
 
-double TimeBfs(graph *G, int v, int n){
-    double totalTime= 0.0;
-    for(int i=0;i<G->V;i++){
-        Info_Vertice *vert= (Info_Vertice *)malloc(sizeof(Info_Vertice)* G->V);
-        for(int w=0;w<G->V;i++){
-            G->visitado[w]=0;
-            vert[w].profundidade=0;
-            vert[w].pai=-1;
-        }
-        totalTime+= bfs(G, v, vert);
-        free(vert);
-    }
-    return totalTime/n;
-}
 int writeGeneTreeBFS(const char *namefile, int v, graph *G)
 {
     v--;
