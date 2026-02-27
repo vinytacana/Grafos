@@ -1,16 +1,33 @@
-CXX = g++
-CXXFLAGS = -Wall -Wextra -std=c++11 -O2
+CC = gcc
+CFLAGS = -Wall -Wextra -O3 -std=c99 -Iinclude
+SRC_DIR = src
+OBJ_DIR = obj
+INC_DIR = include
 
-all: main
+# Arquivos fonte e objetos
+SRCS = $(wildcard $(SRC_DIR)/*.c)
+OBJS = $(patsubst $(SRC_DIR)/%.c, $(OBJ_DIR)/%.o, $(SRCS))
 
-main: Main.o Grafo.o
-	$(CXX) $(CXXFLAGS) -o main Main.o Grafo.o
+# Nome do executável
+TARGET = main
 
-Main.o: Main.cpp Grafo.h
-	$(CXX) $(CXXFLAGS) -c Main.cpp
+all: $(TARGET) output_dir
 
-Grafo.o: Grafo.cpp Grafo.h
-	$(CXX) $(CXXFLAGS) -c Grafo.cpp
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^
+
+# Regra genérica para criar arquivos objeto
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+	$(CC) $(CFLAGS) -c $< -o $@
+
+# Criar os diretórios se não existirem
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
+output_dir:
+	mkdir -p output
 
 clean:
-	rm -f *.o main
+	rm -rf $(OBJ_DIR) $(TARGET) output/ saida_bfs.txt saida_dfs.txt informacoes_grafo.txt
+
+.PHONY: all clean output_dir
